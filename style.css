@@ -1,0 +1,99 @@
+
+.skills-box{
+    padding:40px 40px 20px 40px;
+    background:transparent;
+    border-color:var(--my-border-color);
+    border-style:solid;
+    border-width:var(--my-border-width);
+}
+.skills-container{
+    width: 100%;
+    background-color: #ddd;
+    /*padding:40px 0 0 0;*/
+}
+.skills {
+    text-align: right;
+    padding: 0px;
+    color: white;    
+    height:3px; 
+}
+@keyframes achievement {
+    from{width:0}
+    to{width:var(--my-anime-width)}
+}
+.skills-color {    
+    background: var(--my-color-var);
+    animation-fill-mode: forwards;
+    animation-name: achievement;
+    animation-duration: var(--my-anime-secs);
+}
+
+.skills-color:after {/* small ball*/
+    content: "";
+    position: absolute;
+    top: 37px;
+    width: 10px;
+    height: 10px;
+    border-radius: 30px;
+    background: var(--my-color-var);
+}
+
+.skills-color:before {/* square*/
+    content: "";
+    position: absolute;
+    margin-left:var(--my-margin-left);
+    top: 0px;
+    width:100%;
+    max-width: var(--my-max-width);
+    height: 30px;
+    z-index:1;
+    border-radius: var(--my-border-radius);
+    background: var(--my-color-var);
+    -webkit-box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+}
+@keyframes growing {
+    from{font-size:0px;}
+    to{font-size:17px;}
+}
+.skills-a{
+    position: absolute;
+    margin-left: var(--my-a-margin-left);
+    top: 6px;
+    z-index:2;
+    animation-fill-mode: forwards;
+    animation-name: growing;
+    animation-duration: var(--my-anime-secs);    
+}
+
+.skills-content {
+    margin:20px 0 0;
+}
+
+.skills-title{
+    color: var(--my-color-var);
+    font-weight: 400; 
+    font-size:20px;
+}
+
+/* table */
+.skills-table{
+    margin-top: 10px;
+}
+.skills-table td {
+    padding:3px 8px!important;
+}
+.tr-first{
+    font-size:var(--my-first-size);
+    color:var(--my-first-color);
+}
+.tr-second{
+    font-size:var(--my-second-size);
+    color:var(--my-second-color);
+}
+.skills-footer {
+    font-weight: 100;
+    margin: 20px 0 0; 
+    line-height: 20px;
+    letter-spacing:1;
+}

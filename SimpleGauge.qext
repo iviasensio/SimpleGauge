@@ -1,0 +1,14 @@
+{
+	"name" : "SimpleGauge",
+	"description" : "Simple Gauge for Qlik Sense",
+	"icon" : "extension",
+	"type" : "visualization",
+	"version" : "1.0",	
+	"author" : "Ivan Felipe",
+	"email" : "ivan.felipe@qlik.com",
+	"company" : "QlikTech Iberia",
+	"preview": "SimpleGauge.png",
+	"keywords" : "qlik-sense, visualization-extension, extension, visualization",
+	"license" : "mit",
+	"dependencies" : { "qlik-sense" : ">=June 2017" }
+}
