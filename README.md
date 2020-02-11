@@ -5,7 +5,8 @@ Simple Gauge, a Qlik Sense Extension
 
 Available in https://github.com/iviasensio/SimpleGauge
 
-Current version 1.0 15-apr-2019. Compatible with QS September 2017 or higher
+Previous version 1.0 15-apr-2019. Compatible with QS September 2017 or higher
+Current version 2.0 11-feb-2020. Compatible with QS September 2017 or higher
 
 Author Ivan Felipe Asensio QlikTech Iberia,s.l.
 
@@ -15,6 +16,10 @@ This extension is a gauge chart with simple and smart look.
 - work with '%' or absolute values 
 - smoth shapes
 - responsive design 
+
+### v2.0 Features
+- Allow a background color 
+- Add semaphoric color for KPIs limits
 
 ### Look
 ![alt tag](https://github.com/iviasensio/Guides/blob/master/SimpleGauge/SimpleGauge.png)

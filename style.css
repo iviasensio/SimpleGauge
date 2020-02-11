@@ -1,7 +1,6 @@
-
 .skills-box{
     padding:40px 40px 20px 40px;
-    background:transparent;
+    /*background:transparent;*/
     border-color:var(--my-border-color);
     border-style:solid;
     border-width:var(--my-border-width);
@@ -14,7 +13,7 @@
 .skills {
     text-align: right;
     padding: 0px;
-    color: white;    
+    /*color: white;*/
     height:3px; 
 }
 @keyframes achievement {
@@ -36,6 +35,9 @@
     height: 10px;
     border-radius: 30px;
     background: var(--my-color-var);
+    /*animation-fill-mode: forwards;
+    animation-name: achievement;
+    animation-duration: var(--my-anime-secs);*/
 }
 
 .skills-color:before {/* square*/

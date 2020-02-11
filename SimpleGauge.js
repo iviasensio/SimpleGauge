@@ -31,30 +31,59 @@ function ( qlik, style, properties ) {
 		paint: function ( $element, layout) {
 			var qTitleMatrix = new Array();						
 			var qColorMatrix = new Array();
+			var qTextColor = new Array();
 			var qSizeMatrix = new Array();
 			var qAlignMatrix = new Array();
 			var qFontMatrix = new Array();
+			var qLimitBool = new Array();
+			var qLimitNum = new Array();
+			var qLimitColor = new Array();
 			// the measures properties values			
 			layout.qHyperCube.qMeasureInfo.forEach(function (measure) {
          		qTitleMatrix.push(measure.qFallbackTitle);
          		qColorMatrix.push(measure.meascolor.color);
+         		if(measure.meascolor.color == '#ffffff'){
+         			qTextColor.push('#7b7a78')
+         		}else{
+         			qTextColor.push('#ffffff')
+         		}
          		qSizeMatrix.push(measure.meassize);
          		qAlignMatrix.push(measure.measalign);
          		qFontMatrix.push(measure.measfont);
+         		qLimitBool.push(measure.measlimitbool);
+         		qLimitNum.push(measure.measlimitnum);
+         		qLimitColor.push(measure.measlimitcolor.color);
          	})
 
-			var qVal   = layout.qHyperCube.qGrandTotalRow[0].qNum;
-            var qTxt   = layout.qHyperCube.qGrandTotalRow[0].qText;            
-            var qTitle = qTitleMatrix[0];   
-            var qFont  = qFontMatrix[0];
+			var qVal    = layout.qHyperCube.qGrandTotalRow[0].qNum;
+            var qTxt    = layout.qHyperCube.qGrandTotalRow[0].qText;            
+            var qTitle  = qTitleMatrix[0];   
+            var qFont   = qFontMatrix[0];
             
+            var qLimitB = qLimitBool[0];
+            var qLimitN = qLimitNum[0];
+            var qLimitC = qLimitColor[0];
+            
+            var showMeasTitle = layout.showmeastitle;
             var minVal = layout.minValue;
             var maxVal = layout.maxValue;	  
             var animeSecs = layout.animeSecs + 's';          
             var backgroundcolor  = qColorMatrix[0];
+            var textcolor = qTextColor[0];
+            if(qLimitB && qLimitN >= qVal){
+            	backgroundcolor = qLimitC;
+            	if(qLimitC != '#ffffff'){
+            		textcolor = '#ffffff';
+            	}
+            }
             var qBorderBool = layout.borderbool;
             var qBorderColor = layout.bordercolor.color;
             var qBorderWidth = layout.borderwidth + 'px';
+            var qBackgroundBox = 'transparent';
+
+            if(!layout.backgroundbool){
+            	qBackgroundBox = layout.backgroundcolorbox.color;
+            }
             if(!qBorderBool){
             	qBorderWidth = 0;
             }
@@ -104,18 +133,23 @@ function ( qlik, style, properties ) {
             /* The visualization */
             var html = 
             '<div qv-extension>' +
-				'<div class="skills-box" style = "--my-border-width:' + qBorderWidth + ';--my-border-color:' + qBorderColor + '">' +
+				'<div class="skills-box" style = "--my-border-width:' + qBorderWidth + ';--my-border-color:' + qBorderColor + ';background:' + qBackgroundBox +'">' +
 					'<div class="skills-container">' +
-						'<div class="skills skills-color" style = "--my-anime-secs:' + animeSecs + ';--my-anime-width:' + cssWidth + '%;--my-max-width: ' + cssMaxWidth + ';--my-color-var: ' + backgroundcolor + ';--my-border-radius:' + cssRadius + ';--my-margin-left: ' + cssMarginLeft + ' ">' +
+						'<div class="skills skills-color" style = "--my-anime-secs:' + animeSecs + ';--my-anime-width:' + cssWidth + '%;--my-max-width: ' + cssMaxWidth + ';--my-color-var: ' + backgroundcolor + ';color:' + textcolor + ';--my-border-radius:' + cssRadius + ';--my-margin-left: ' + cssMarginLeft + ' ">' +
 							'<a class="skills-a" style = "--my-a-margin-left: ' + cssAMarginLeft + ';--my-anime-secs: ' + animeSecs + ';font-family:' + qFont + '">' + qTxt + '</a>' +
 						'</div>' +							
-					'</div>' +
-					'<div class="skills-content">' +
-                        '<h5 class="skills-title" style = "font-family:' + qFont + ';--my-color-var: ' + backgroundcolor + '">' + qTitle + '</h5>' +
-                    '</div>';
+					'</div>';
+					if(showMeasTitle){
+						html += '<div class="skills-content">' +
+	                        '<h5 class="skills-title" style = "font-family:' + qFont + ';--my-color-var: ' + backgroundcolor + '">' + qTitle + '</h5>' +
+                    	'</div>';
+                    }
             
             if(qSizeMatrix.length > 1){
 				var txtval1 = layout.qHyperCube.qGrandTotalRow[1].qText;
+				if(qLimitBool[1] && qLimitNum[1] >= layout.qHyperCube.qGrandTotalRow[1].qNum){
+	            	qColorMatrix[1] = qLimitColor[1];	            	
+	            }
             	html += '<table class="skills-table">' +                        
 				'<tr class="tr-first" style = "--my-first-size:' + qSizeMatrix[1] + 'px;--my-first-color:' + qColorMatrix[1] + '">' +
 					'<td style = "font-family:' + qFontMatrix[1] + ';">' + qTitleMatrix[1] +'</td>' +
@@ -124,6 +158,9 @@ function ( qlik, style, properties ) {
 				
 				if(qSizeMatrix.length > 2){		
 					var txtval2 = layout.qHyperCube.qGrandTotalRow[2].qText;
+					if(qLimitBool[2] && qLimitNum[2] >= layout.qHyperCube.qGrandTotalRow[2].qNum){
+	            		qColorMatrix[2] = qLimitColor[2];
+	            	}
 					html += '<tr class="tr-second" style = "--my-second-size:' + qSizeMatrix[2] + 'px;--my-second-color:' + qColorMatrix[2] + '">' +
 						'<td style = "font-family:' + qFontMatrix[2] + ';">' + qTitleMatrix[2] +'</td>' +
 						'<td style = "font-family:' + qFontMatrix[2] + ';text-align:' + qAlignMatrix[2] + '">' + txtval2 + '</td>' +
@@ -132,6 +169,9 @@ function ( qlik, style, properties ) {
 
 				if(qSizeMatrix.length > 3){		
 					var txtval3 = layout.qHyperCube.qGrandTotalRow[3].qText;
+					if(qLimitBool[3] && qLimitNum[3] >= layout.qHyperCube.qGrandTotalRow[3].qNum){
+	            		qColorMatrix[3] = qLimitColor[3];
+	            	}
 					html += '<tr class="tr-second" style = "font-family:' + qFontMatrix[3] + ';--my-second-size:' + qSizeMatrix[3] + 'px;--my-second-color:' + qColorMatrix[3] + '">' +
 						'<td style = "font-family:' + qFontMatrix[3] + ';">' + qTitleMatrix[3] +'</td>' +
 						'<td style = "font-family:' + qFontMatrix[3] + ';text-align:' + qAlignMatrix[3] + '">' + txtval3 + '</td>' +
@@ -140,6 +180,9 @@ function ( qlik, style, properties ) {
 
 				if(qSizeMatrix.length > 4){		
 					var txtval4 = layout.qHyperCube.qGrandTotalRow[4].qText;
+					if(qLimitBool[4] && qLimitNum[4] >= layout.qHyperCube.qGrandTotalRow[4].qNum){
+	            		qColorMatrix[4] = qLimitColor[4];
+	            	}
 					html += '<tr class="tr-second" style = "font-family:' + qFontMatrix[4] + ';--my-second-size:' + qSizeMatrix[4] + 'px;--my-second-color:' + qColorMatrix[4] + '">' +
 						'<td style = "font-family:' + qFontMatrix[4] + ';">' + qTitleMatrix[4] +'</td>' +
 						'<td style = "font-family:' + qFontMatrix[4] + ';text-align:' + qAlignMatrix[4] + '">' + txtval4 + '</td>' +

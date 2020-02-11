@@ -3,7 +3,7 @@
 	"description" : "Simple Gauge for Qlik Sense",
 	"icon" : "extension",
 	"type" : "visualization",
-	"version" : "1.0",	
+	"version" : "2.0",	
 	"author" : "Ivan Felipe",
 	"email" : "ivan.felipe@qlik.com",
 	"company" : "QlikTech Iberia",

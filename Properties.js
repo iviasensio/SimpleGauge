@@ -87,6 +87,42 @@ define([], function () {
                         label: "Font Family",
                         options: vFontFamily,
                         defaultValue: "sans-serif"                        
+                    },
+                    measLimitBool: {
+                        ref : "qDef.measlimitbool",
+                        type : "boolean",
+                        component : "switch",
+                        label : "Add a limit",
+                        options: [{
+                            value: true,
+                            label: "On"
+                        }, {
+                            value: false,
+                            label: "Off"
+                        }],
+                        defaultValue: false
+                    },
+                    measLimitNum: {
+                        type: "number",
+                        ref: "qDef.measlimitnum",
+                        label: "Limit value",                        
+                        defaultValue: 0,
+                        expression : "optional",
+                        show : function(data) {
+                            return  data.qDef.measlimitbool;
+                        }
+                    },
+                    measLimitColor: {
+                        ref: "qDef.measlimitcolor",
+                        label: "Limit color",
+                        type: "object",  
+                        component: "color-picker",  
+                        defaultValue: {  
+                            color: "#ff0000"  
+                        },
+                        show : function(data) {
+                            return  data.qDef.measlimitbool;
+                        }
                     }
                 }
             },
@@ -101,6 +137,20 @@ define([], function () {
                         label: "Gauge settings",
                         type: "items",
                         items: {
+                            showMeasTitle: {
+                                ref : "showmeastitle",
+                                type : "boolean",
+                                component : "switch",
+                                label : "Show Measure Title",
+                                options: [{
+                                    value: true,
+                                    label: "On"
+                                }, {
+                                    value: false,
+                                    label: "Off"
+                                }],
+                                defaultValue: true
+                            },
                             minValue: {
                                 type: "number",
                                 ref: "minValue",
@@ -157,6 +207,32 @@ define([], function () {
                                 show : function(data) {
                                     return  data.borderbool;
                                 }                               
+                            },
+                            backgroundBool: {
+                                ref : "backgroundbool",
+                                type : "boolean",
+                                component : "switch",
+                                label : "Background transparent",
+                                options: [{
+                                    value: true,
+                                    label: "On"
+                                }, {
+                                    value: false,
+                                    label: "Off"
+                                }],
+                                defaultValue: true
+                            },
+                            backgroundColorBox: {
+                                ref: "backgroundcolorbox",
+                                label: "Background color",
+                                type: "object",  
+                                component: "color-picker",  
+                                defaultValue: {  
+                                    color: "#ffffff"  
+                                },
+                                show : function(data) {
+                                    return  data.backgroundbool == false;
+                                }  
                             },
                             paragraphBool: {
                                 ref : "extrapbool",
