@@ -45,9 +45,18 @@ define([], function () {
                 min: 1,
                 max: 5,
                 items: {
+                    measTextColor: {
+                        ref: "qDef.meastextcolor",
+                        label: "Text Color",
+                        type: "object",  
+                        component: "color-picker",  
+                        defaultValue: {  
+                            color: "#4CAF50"  
+                        }  
+                    },
                     measColor: {
                         ref: "qDef.meascolor",
-                        label: "Color",
+                        label: "Measure Color",
                         type: "object",  
                         component: "color-picker",  
                         defaultValue: {  
@@ -62,7 +71,7 @@ define([], function () {
                         min: 10,
                         max: 25,
                         step: 1,
-                        defaultValue: 18                                
+                        defaultValue: 20                                
                     },
                     measAlign: {
                         ref: "qDef.measalign",
@@ -120,6 +129,23 @@ define([], function () {
                         defaultValue: {  
                             color: "#ff0000"  
                         },
+                        show : function(data) {
+                            return  data.qDef.measlimitbool;
+                        }
+                    },
+                    measLimitColorText: {
+                        ref : "qDef.measlimitcolortextbool",
+                        type : "boolean",
+                        component : "switch",
+                        label : "Set color to text",
+                        options: [{
+                            value: true,
+                            label: "On"
+                        }, {
+                            value: false,
+                            label: "Off"
+                        }],
+                        defaultValue: false,                        
                         show : function(data) {
                             return  data.qDef.measlimitbool;
                         }
@@ -293,6 +319,30 @@ define([], function () {
                                 show : function(data) {
                                     return data.extrapbool;
                                 }
+                            },                            
+                            extraTextBool: {
+                                ref : "extratbool",
+                                type : "boolean",
+                                component : "switch",
+                                label : "Extra info in main KPI",
+                                options: [{
+                                    value: true,
+                                    label: "On"
+                                }, {
+                                    value: false,
+                                    label: "Off"
+                                }],
+                                defaultValue: false
+                            },
+                            extraText: {
+                                ref : "extrattext",
+                                label : "Extra text", 
+                                expression : "optional",
+                                type : "string",
+                                defaultValue : '',
+                                show : function(data) {
+                                    return  data.extratbool;
+                                }                                
                             }
                         }
                     }                

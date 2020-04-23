@@ -75,7 +75,7 @@
 .skills-title{
     color: var(--my-color-var);
     font-weight: 400; 
-    font-size:20px;
+    /*font-size:20px;*/
 }
 
 /* table */
@@ -87,11 +87,11 @@
 }
 .tr-first{
     font-size:var(--my-first-size);
-    color:var(--my-first-color);
+    /*color:var(--my-first-color);*/
 }
 .tr-second{
     font-size:var(--my-second-size);
-    color:var(--my-second-color);
+    /*color:var(--my-second-color);*/
 }
 .skills-footer {
     font-weight: 100;

@@ -29,7 +29,8 @@ function ( qlik, style, properties ) {
 		},
 
 		paint: function ( $element, layout) {
-			var qTitleMatrix = new Array();						
+			var qTitleMatrix = new Array();		
+			var qTextColorMatrix = new Array();				
 			var qColorMatrix = new Array();
 			var qTextColor = new Array();
 			var qSizeMatrix = new Array();
@@ -38,9 +39,16 @@ function ( qlik, style, properties ) {
 			var qLimitBool = new Array();
 			var qLimitNum = new Array();
 			var qLimitColor = new Array();
+			var qLimitColorTextBool = new Array();
 			// the measures properties values			
 			layout.qHyperCube.qMeasureInfo.forEach(function (measure) {
          		qTitleMatrix.push(measure.qFallbackTitle);
+         		if(measure.meastextcolor){
+         			qTextColorMatrix.push(measure.meastextcolor.color);
+         		}else{
+         			qTextColorMatrix.push(measure.meascolor.color);
+         		}
+         		
          		qColorMatrix.push(measure.meascolor.color);
          		if(measure.meascolor.color == '#ffffff'){
          			qTextColor.push('#7b7a78')
@@ -53,16 +61,24 @@ function ( qlik, style, properties ) {
          		qLimitBool.push(measure.measlimitbool);
          		qLimitNum.push(measure.measlimitnum);
          		qLimitColor.push(measure.measlimitcolor.color);
+         		qLimitColorTextBool.push(measure.measlimitcolortextbool);
          	})
 
 			var qVal    = layout.qHyperCube.qGrandTotalRow[0].qNum;
-            var qTxt    = layout.qHyperCube.qGrandTotalRow[0].qText;            
+            var qTxt    = layout.qHyperCube.qGrandTotalRow[0].qText;   
+            var vExtraText = layout.extrattext;     
+            var compareMaxVal = 80;
+            if(layout.extratbool){
+            	qTxt += '  ' + vExtraText;
+            	compareMaxVal = 60;
+            }    
             var qTitle  = qTitleMatrix[0];   
             var qFont   = qFontMatrix[0];
             
             var qLimitB = qLimitBool[0];
             var qLimitN = qLimitNum[0];
             var qLimitC = qLimitColor[0];
+            var qLimitT = qLimitColorTextBool[0];
             
             var showMeasTitle = layout.showmeastitle;
             var minVal = layout.minValue;
@@ -75,7 +91,11 @@ function ( qlik, style, properties ) {
             	if(qLimitC != '#ffffff'){
             		textcolor = '#ffffff';
             	}
+            	if(qLimitT){
+            		qTextColorMatrix[0] = qLimitC;
+            	}
             }
+           
             var qBorderBool = layout.borderbool;
             var qBorderColor = layout.bordercolor.color;
             var qBorderWidth = layout.borderwidth + 'px';
@@ -100,9 +120,9 @@ function ( qlik, style, properties ) {
             if(qTxt.length > 4){
             	cssMaxWidth = qTxt.length * 13 + 'px';
             }
-           
-            if(cssWidth>80){
-            	if(cssWidth>100){
+              console.log(qTxt.length,cssWidth,compareMaxVal)         
+            if(cssWidth>compareMaxVal){
+            	if(cssWidth>100){ 
             		cssWidth = 100;
             	}
             	cssRadius = '20px 20px 0px 20px';	            	
@@ -110,18 +130,28 @@ function ( qlik, style, properties ) {
 					case (qTxt.length<5):
 						cssMarginLeft  = '-50px';
 						cssAMarginLeft = '-45px';
+						cssMaxWidth = qTxt.length * 13 + 'px';
 						break;
 					case (qTxt.length==5):
 						cssMarginLeft  = '-65px';
 						cssAMarginLeft = '-55px';
+						cssMaxWidth = qTxt.length * 13 + 'px';
 						break;
 					case (qTxt.length==6):
 						cssMarginLeft  = '-80px';
 						cssAMarginLeft = '-65px';
+						cssMaxWidth = qTxt.length * 13 + 'px';
 						break;
-					case (qTxt.length>6):
-						cssMarginLeft  = '-90px';
-						cssAMarginLeft = '-75px';
+					case (qTxt.length>6 && qTxt.length<11):
+						cssMarginLeft  = '-100px';
+						cssAMarginLeft = '-85px';
+						cssMaxWidth = qTxt.length * 13 + 'px';
+						break;
+					case (qTxt.length>10):
+						cssMarginLeft  = '-120px';
+						cssAMarginLeft = '-105px';
+						cssMaxWidth = qTxt.length * 10 + 'px';
+						console.log('entro',cssMaxWidth)
 						break;
 				}
             }else{
@@ -141,29 +171,36 @@ function ( qlik, style, properties ) {
 					'</div>';
 					if(showMeasTitle){
 						html += '<div class="skills-content">' +
-	                        '<h5 class="skills-title" style = "font-family:' + qFont + ';--my-color-var: ' + backgroundcolor + '">' + qTitle + '</h5>' +
+	                        '<h5 class="skills-title" style = "font-family:' + qFont + ';--my-color-var: ' + qTextColorMatrix[0] + ';font-size:' + qSizeMatrix[0] + 'px">' + qTitle + '</h5>' +
                     	'</div>';
                     }
             
             if(qSizeMatrix.length > 1){
 				var txtval1 = layout.qHyperCube.qGrandTotalRow[1].qText;
 				if(qLimitBool[1] && qLimitNum[1] >= layout.qHyperCube.qGrandTotalRow[1].qNum){
-	            	qColorMatrix[1] = qLimitColor[1];	            	
+	            	qColorMatrix[1] = qLimitColor[1];
+	            	if(qLimitColorTextBool[1]){
+            			qTextColorMatrix[1] = qLimitColor[1];
+            		}
 	            }
-            	html += '<table class="skills-table">' +                        
-				'<tr class="tr-first" style = "--my-first-size:' + qSizeMatrix[1] + 'px;--my-first-color:' + qColorMatrix[1] + '">' +
+
+            	html += '<table class="skills-table">' +                     
+				'<tr class="tr-first" style = "--my-first-size:' + qSizeMatrix[1] + 'px">' +
 					'<td style = "font-family:' + qFontMatrix[1] + ';">' + qTitleMatrix[1] +'</td>' +
-					'<td style = "font-family:' + qFontMatrix[1] + ';text-align:' + qAlignMatrix[1] + '">' + txtval1 + '</td>' +
+					'<td style = "font-family:' + qFontMatrix[1] + ';text-align:' + qAlignMatrix[1] + ';color:' + qColorMatrix[1] + '">' + txtval1 + '</td>' +
 				'</tr>';
 				
 				if(qSizeMatrix.length > 2){		
 					var txtval2 = layout.qHyperCube.qGrandTotalRow[2].qText;
 					if(qLimitBool[2] && qLimitNum[2] >= layout.qHyperCube.qGrandTotalRow[2].qNum){
 	            		qColorMatrix[2] = qLimitColor[2];
+	            		if(qLimitColorTextBool[2]){
+            				qTextColorMatrix[2] = qLimitColor[2];
+            			}
 	            	}
-					html += '<tr class="tr-second" style = "--my-second-size:' + qSizeMatrix[2] + 'px;--my-second-color:' + qColorMatrix[2] + '">' +
-						'<td style = "font-family:' + qFontMatrix[2] + ';">' + qTitleMatrix[2] +'</td>' +
-						'<td style = "font-family:' + qFontMatrix[2] + ';text-align:' + qAlignMatrix[2] + '">' + txtval2 + '</td>' +
+					html += '<tr class="tr-second" style = "--my-second-size:' + qSizeMatrix[2] + 'px">' +
+						'<td style = "font-family:' + qFontMatrix[2] + ';color:' + qTextColorMatrix[2] + '">' + qTitleMatrix[2] +'</td>' +
+						'<td style = "font-family:' + qFontMatrix[2] + ';text-align:' + qAlignMatrix[2] + ';color:' + qColorMatrix[2] + '">' + txtval2 + '</td>' +
 					'</tr>';											
 				}
 
@@ -171,10 +208,13 @@ function ( qlik, style, properties ) {
 					var txtval3 = layout.qHyperCube.qGrandTotalRow[3].qText;
 					if(qLimitBool[3] && qLimitNum[3] >= layout.qHyperCube.qGrandTotalRow[3].qNum){
 	            		qColorMatrix[3] = qLimitColor[3];
+	            		if(qLimitColorTextBool[3]){
+            				qTextColorMatrix[3] = qLimitColor[3];
+            			}
 	            	}
-					html += '<tr class="tr-second" style = "font-family:' + qFontMatrix[3] + ';--my-second-size:' + qSizeMatrix[3] + 'px;--my-second-color:' + qColorMatrix[3] + '">' +
-						'<td style = "font-family:' + qFontMatrix[3] + ';">' + qTitleMatrix[3] +'</td>' +
-						'<td style = "font-family:' + qFontMatrix[3] + ';text-align:' + qAlignMatrix[3] + '">' + txtval3 + '</td>' +
+					html += '<tr class="tr-second" style = "font-family:' + qFontMatrix[3] + ';--my-second-size:' + qSizeMatrix[3] + 'px">' +
+						'<td style = "font-family:' + qFontMatrix[3] + ';color:' + qTextColorMatrix[3] + '">' + qTitleMatrix[3] +'</td>' +
+						'<td style = "font-family:' + qFontMatrix[3] + ';text-align:' + qAlignMatrix[3] + ';color:' + qColorMatrix[3] + '">' + txtval3 + '</td>' +
 					'</tr>';											
 				}
 
@@ -182,10 +222,13 @@ function ( qlik, style, properties ) {
 					var txtval4 = layout.qHyperCube.qGrandTotalRow[4].qText;
 					if(qLimitBool[4] && qLimitNum[4] >= layout.qHyperCube.qGrandTotalRow[4].qNum){
 	            		qColorMatrix[4] = qLimitColor[4];
+	            		if(qLimitColorTextBool[4]){
+            				qTextColorMatrix[4] = qLimitColor[4];
+            			}
 	            	}
-					html += '<tr class="tr-second" style = "font-family:' + qFontMatrix[4] + ';--my-second-size:' + qSizeMatrix[4] + 'px;--my-second-color:' + qColorMatrix[4] + '">' +
-						'<td style = "font-family:' + qFontMatrix[4] + ';">' + qTitleMatrix[4] +'</td>' +
-						'<td style = "font-family:' + qFontMatrix[4] + ';text-align:' + qAlignMatrix[4] + '">' + txtval4 + '</td>' +
+					html += '<tr class="tr-second" style = "font-family:' + qFontMatrix[4] + ';--my-second-size:' + qSizeMatrix[4] + 'px">' +
+						'<td style = "font-family:' + qFontMatrix[4] + ';color:' + qTextColorMatrix[4] + '">' + qTitleMatrix[4] +'</td>' +
+						'<td style = "font-family:' + qFontMatrix[4] + ';text-align:' + qAlignMatrix[4] + ';color:' + qColorMatrix[4] + '">' + txtval4 + '</td>' +
 					'</tr>';											
 				}
 				html += '</table>';
