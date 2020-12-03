@@ -108,7 +108,7 @@ function ( qlik, style, properties ) {
             	qBorderWidth = 0;
             }
             // the css dynamic values
-            var cssWidth = Math.round((qVal / maxVal) * 100);
+            var cssWidth = ((qVal - minVal) / (maxVal-minVal))*100;
             if(minVal < 0) {
             	cssWidth = Math.round(((maxVal + qVal) / (Math.abs(minVal) + maxVal))*100);            	
             }	
@@ -119,8 +119,7 @@ function ( qlik, style, properties ) {
             var cssMaxWidth = '50px';
             if(qTxt.length > 4){
             	cssMaxWidth = qTxt.length * 13 + 'px';
-            }
-              console.log(qTxt.length,cssWidth,compareMaxVal)         
+            }              
             if(cssWidth>compareMaxVal){
             	if(cssWidth>100){ 
             		cssWidth = 100;
@@ -150,8 +149,7 @@ function ( qlik, style, properties ) {
 					case (qTxt.length>10):
 						cssMarginLeft  = '-120px';
 						cssAMarginLeft = '-105px';
-						cssMaxWidth = qTxt.length * 10 + 'px';
-						console.log('entro',cssMaxWidth)
+						cssMaxWidth = qTxt.length * 10 + 'px';						
 						break;
 				}
             }else{
