@@ -33,7 +33,8 @@ This extension is a gauge chart with simple and smart look.
 - If you experience some issues when installing the new version, drag the new extension version inside the old visualization and set the option Convert to: SimpleGauge 
 
 ### Look
-![alt tag](https://github.com/iviasensio/Guides/blob/master/SimpleGauge/SimpleGauge.png)
+![SimpleGauge](https://user-images.githubusercontent.com/11334576/153008005-1fbdda82-6340-4c4e-9449-88121a595805.png)
+
 
 
 *Install in Server:
