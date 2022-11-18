@@ -83,6 +83,26 @@ define(['qlik','./js/util'], function (qlik, utils) {
                         value: "url",
                         label: "to a url"
                     }];
+    var vImgSize = [{
+                        value: "auto",
+                        label: "Original Size"
+                    }, {
+                        value: "contain",
+                        label: "Always fit"
+                    }, {
+                        value: "100%",
+                        label: "Fit to width"
+                    }, {
+                        /*value: "auto 100%",*/
+                        value: "cover",
+                        label: "Fit to height"
+                    }, {
+                        value: "100% 100%",
+                        label: "Stretch to fit"
+                    }, {
+                        value: "percentage",
+                        label: "Chose a percentage"
+                    }];
     return {
         type: "items",
         component: "accordion",
@@ -288,7 +308,27 @@ define(['qlik','./js/util'], function (qlik, utils) {
                                     value: false,
                                     label: "Off"
                                 }],
-                                defaultValue: true
+                                defaultValue: true,
+                                show : function(data) {
+                                    return  data.gaugetype == 'line';
+                                }
+                            },
+                            showMeasValue: {
+                                ref : "showmeasvalue",
+                                type : "boolean",
+                                component : "switch",
+                                label : "Show Measure Value",
+                                options: [{
+                                    value: true,
+                                    label: "On"
+                                }, {
+                                    value: false,
+                                    label: "Off"
+                                }],
+                                defaultValue: true,
+                                show : function(data) {
+                                    return  data.gaugetype == 'circle';
+                                }
                             },
                             minValue: {
                                 type: "number",
@@ -374,6 +414,101 @@ define(['qlik','./js/util'], function (qlik, utils) {
                                 show : function(data) {
                                     return  data.backgroundbool == false;
                                 }  
+                            },                            
+                            // images
+                            backgroundImageBool: {
+                                ref : "backgroundimgbool",
+                                type : "boolean",
+                                component : "switch",
+                                label : "Use background image",
+                                options: [{
+                                    value: true,
+                                    label: "On"
+                                }, {
+                                    value: false,
+                                    label: "Off"
+                                }],
+                                defaultValue: false,
+                                show : function(data) {
+                                    return  data.gaugetype == 'circle';
+                                }
+                            },
+                            backgroundImageSource: {
+                                type: "string",
+                                ref: "backgroundimgsrc",
+                                component: "radiobuttons",
+                                label: "Image source",
+                                options: [
+                                  {
+                                    value: "url",
+                                    label: "Image from Url"
+                                  },
+                                  {
+                                    value: "lib",
+                                    label: "Image from library"
+                                  }
+                                ],
+                                defaultValue: "lib",
+                                show : function(data) {
+                                    return data.backgroundimgbool && data.gaugetype == 'circle';
+                                }
+                            },
+                            backgroundImage: {
+                                label:"Image",
+                                component: "media",
+                                ref: "backgroundimage",
+                                layoutRef: "backgroundimage",
+                                type: "string",
+                                show : function(data) {
+                                    return data.backgroundimgbool && data.backgroundimgsrc != 'url' && data.gaugetype == 'circle';
+                                }
+                            },
+                            backgroundImageUrl: {
+                                type: "string",
+                                ref: "backgroundimageurl",
+                                label: "Image url",
+                                defaultValue : '',
+                                expression : "optional",
+                                show : function(data) {
+                                    return data.backgroundimgbool && data.backgroundimgsrc == 'url' && data.gaugetype == 'circle';
+                                }
+                            },                            
+                            backgroundImageSize: {
+                                ref: "backgroundimagesize",
+                                type: "string",
+                                component: "dropdown",
+                                label: "Size",
+                                options: vImgSize,
+                                defaultValue: "cover",
+                                show : function(data) {
+                                    return data.backgroundimgbool;
+                                }
+                            },
+                            backgroundImgSizePerc: {
+                                type: "number",
+                                component: "slider",
+                                label: "Custom percentage %",
+                                ref: "backgroundimgsizeperc",
+                                min: 1,
+                                max: 100,
+                                step: 1,
+                                defaultValue: 80,
+                                show : function(data) {
+                                    return  data.backgroundimgbool && data.backgroundimagesize == 'percentage';
+                                }                               
+                            },
+                            CircleBorderWidth: {
+                                type: "number",
+                                component: "slider",
+                                label: "Border width",
+                                ref: "circleborderwidth",
+                                min: 3,
+                                max: 10,
+                                step: 0.5,
+                                defaultValue: 3.5,
+                                show : function(data) {
+                                    return  data.gaugetype == 'circle';
+                                }                               
                             },
                             paragraphBool: {
                                 ref : "extrapbool",

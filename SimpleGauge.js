@@ -66,7 +66,12 @@ function ( qlik, style,ProgressBar,properties ) {
          		qFontMatrix.push(measure.measfont);
          	})
 			var qVal    = layout.qHyperCube.qGrandTotalRow[0].qNum;
-            var qTxt    = layout.qHyperCube.qGrandTotalRow[0].qText;   
+            var qTxt    = layout.qHyperCube.qGrandTotalRow[0].qText;
+            var qTxtC   = qTxt;
+            var qStroke = layout.circleborderwidth;
+            if(layout.gaugetype == 'line' || !layout.showmeasvalue){
+            	qTxtC = '';
+            }
             var vExtraText = layout.extrattext;     
             
             var vddd = new Date();
@@ -104,6 +109,45 @@ function ( qlik, style,ProgressBar,properties ) {
             if(!qBorderBool){
             	qBorderWidth = 0;
             }
+            // image
+            var vBackgroundImage = '';
+            var vImgPath = '';
+            var prefix = window.location.pathname.substr( 0, window.location.pathname.toLowerCase().lastIndexOf( "/extensions" ) + 1 );
+			var config = {
+			    host: window.location.hostname,
+			    prefix: prefix,
+			    port: window.location.port,
+			    isSecure: window.location.protocol === "https:"
+			};
+            var vServerURLBasic = ( config.isSecure ? "https://" : "http://" ) + config.host + (config.port ? ":" + config.port : "") + config.prefix ;									
+			var vServerURL = vServerURLBasic.replace('/single/','/');
+			
+            if(layout.backgroundimgbool && layout.gaugetype == 'circle'){            	
+            	if(layout.backgroundimgsrc != 'url'){
+            		var auximg = layout.backgroundimage;
+            		if(layout.backgroundimage.indexOf('api/v1') == -1){
+			        	if(auximg.indexOf('media') >= 0){
+			            	if(vServerURL.indexOf(':4848') > 0){
+			            		auximg = auximg.replace('media/','media/' + appId + '/');
+			            	}else{
+			            		if(vCloudBool){
+			            			auximg = '/api/v1/apps/' + appId + auximg.replace('media/','media/files/');
+			            		}
+			            	}
+			            }else{
+			            	if(auximg.indexOf('content/default') >= 0 && vCloudBool){
+			            		auximg = '/api/v1/apps/' + appId + '/media/files/' + auximg.replace('/content/default/','');
+			            	}
+			            }		            
+			        }else{
+			        	var oldAppId = auximg.substring(13, auximg.indexOf('/media/files/'));
+			        	auximg = auximg.replace(oldAppId,appId);			        	
+			        }
+		            vBackgroundImage = vServerURL + auximg;		            
+		        }else{
+		        	vBackgroundImage = layout.backgroundimageurl;
+		        }
+	        }
             // the css dynamic values
             var cssWidth = ((qVal - minVal) / (maxVal-minVal))*100;
             if(minVal < 0) {
@@ -198,7 +242,15 @@ function ( qlik, style,ProgressBar,properties ) {
                     	'</div>';
                     }
 				}else{
-					html += '<div id="' + vContainerId + '" class = "SimpleGauge-container-circle"></div>';					
+					var imgStyle = '';
+					var vBackgroundImgSize = layout.backgroundimagesize;
+					if(vBackgroundImgSize == 'percentage'){
+		         		vBackgroundImgSize = layout.backgroundimgsizeperc + '%';	         		
+		         	}
+					if(vBackgroundImage != '' && vBackgroundImage !='undefined'){
+						imgStyle = 'style = "background: url(' + vBackgroundImage + ');background-size: ' + vBackgroundImgSize + ';background-position: 50% 50%;background-repeat: no-repeat;"';			
+					}					
+					html += '<div id="' + vContainerId + '" class = "SimpleGauge-container-circle" ' + imgStyle + '></div>';					
 				}
 					
             
@@ -253,7 +305,7 @@ function ( qlik, style,ProgressBar,properties ) {
 					// This has to be the same size as the maximum width to
 					// prevent clipping
 					strokeWidth: 4,
-					trailWidth: 3.5,
+					trailWidth: qStroke,//3.5,
 					easing: 'easeInOut',
 					duration: animeMiliSecs,
 					text: {
@@ -265,7 +317,7 @@ function ( qlik, style,ProgressBar,properties ) {
 					step: function(state, circle) {
 					    circle.path.setAttribute('stroke', state.color);
 					    circle.path.setAttribute('stroke-width', state.width);
-					    circle.setText(qTxt);
+					    circle.setText(qTxtC);
 					}
 				});
 				bar.text.style.fontFamily = qFont;
